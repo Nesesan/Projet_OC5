@@ -1,4 +1,3 @@
-import { HttpClientModule } from '@angular/common/http';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ReactiveFormsModule } from '@angular/forms';
 import { MatCardModule } from '@angular/material/card';
@@ -6,37 +5,132 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { Router } from '@angular/router';
 import { RouterTestingModule } from '@angular/router/testing';
-import { expect } from '@jest/globals';
-import { SessionService } from 'src/app/services/session.service';
+import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
 
 import { LoginComponent } from './login.component';
+import { AuthService } from '../../services/auth.service';
+import { SessionService } from 'src/app/services/session.service';
+import { of } from 'rxjs';
+import { SessionInformation } from 'src/app/interfaces/sessionInformation.interface';
+
 
 describe('LoginComponent', () => {
   let component: LoginComponent;
   let fixture: ComponentFixture<LoginComponent>;
+  let httpMock: HttpTestingController;
+  let router: Router;
+  let sessionService: SessionService;
+  let authService: AuthService;
+
+  const mockSession: SessionInformation = {
+    token: 'fake_token',
+    type: 'user',
+    id: 1,
+    username: 'user@mail.com',
+    firstName: 'John',
+    lastName: 'Doe',
+    admin: false
+  };
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       declarations: [LoginComponent],
-      providers: [SessionService],
       imports: [
-        RouterTestingModule,
-        BrowserAnimationsModule,
-        HttpClientModule,
+        ReactiveFormsModule,
         MatCardModule,
         MatIconModule,
         MatFormFieldModule,
         MatInputModule,
-        ReactiveFormsModule]
-    })
-      .compileComponents();
+        BrowserAnimationsModule,
+        RouterTestingModule.withRoutes([]),
+        HttpClientTestingModule
+      ],
+      providers: [AuthService, SessionService]
+    }).compileComponents();
+  });
+
+  beforeEach(() => {
     fixture = TestBed.createComponent(LoginComponent);
     component = fixture.componentInstance;
+    httpMock = TestBed.inject(HttpTestingController);
+    router = TestBed.inject(Router);
+    sessionService = TestBed.inject(SessionService);
+    authService = TestBed.inject(AuthService);
+    jest.spyOn(router, 'navigate');
+    jest.spyOn(sessionService, 'logIn');
     fixture.detectChanges();
   });
 
-  it('should create', () => {
+  afterEach(() => {
+    httpMock.verify();
+  });
+
+  // ---------- UNIT TESTS---------- //
+
+  it('should create the component', () => {
     expect(component).toBeTruthy();
+  });
+
+  it('should set form values correctly', () => {
+    component.form.setValue({
+      email: 'user@mail.com',
+      password: 'password'
+    });
+    expect(component.form.value.email).toBe('user@mail.com');
+    expect(component.form.value.password).toBe('password');
+  });
+
+  it('should call authService.login with correct payload', () => {
+    const loginRequest = { email: 'user@mail.com', password: 'password' };
+    const loginSpy = jest
+      .spyOn(authService, 'login')
+      .mockReturnValue(of(mockSession));
+
+    component.form.setValue(loginRequest);
+    component.submit();
+
+    expect(loginSpy).toHaveBeenCalledWith(loginRequest);
+  });
+
+  // ----------  INTEGRATION TESTS ---------- //
+
+  it('should perform full login flow on successful login', () => {
+    component.form.setValue({
+      email: 'user@mail.com',
+      password: 'password'
+    });
+
+    component.submit();
+
+    const req = httpMock.expectOne('api/auth/login');
+    expect(req.request.method).toBe('POST');
+    expect(req.request.body).toEqual({
+      email: 'user@mail.com',
+      password: 'password'
+    });
+
+    req.flush(mockSession);
+
+    expect(sessionService.logIn).toHaveBeenCalledWith(mockSession);
+    expect(router.navigate).toHaveBeenCalledWith(['/sessions']);
+  });
+
+  it('should set onError to true on failed login', () => {
+    component.form.setValue({
+      email: 'user@mail.com',
+      password: 'wrongPassword'
+    });
+
+    component.submit();
+
+    const req = httpMock.expectOne('api/auth/login');
+    req.flush(
+      { message: 'Unauthorized' },
+      { status: 401, statusText: 'Unauthorized' }
+    );
+
+    expect(component.onError).toBe(true);
   });
 });
