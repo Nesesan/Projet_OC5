@@ -13,6 +13,7 @@ import { HttpClientTestingModule, HttpTestingController } from '@angular/common/
 import { Router } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
 import { SessionInformation } from '../../../../interfaces/sessionInformation.interface';
+import {of} from "rxjs";
 
 describe('LoginComponent (Integration)', () => {
   let component: LoginComponent;
@@ -80,6 +81,17 @@ describe('LoginComponent (Integration)', () => {
     expect(component.form.value.password).toBe('password');
   });
 
+  it('should call authService.login with correct payload', () => {
+    const loginRequest = { email: 'user@mail.com', password: 'password' };
+    const loginSpy = jest
+      .spyOn(authService, 'login')
+      .mockReturnValue(of(mockSession));
+
+    component.form.setValue(loginRequest);
+    component.submit();
+
+    expect(loginSpy).toHaveBeenCalledWith(loginRequest);
+  });
 
   it('should perform full login flow on successful login', () => {
     component.form.setValue({
