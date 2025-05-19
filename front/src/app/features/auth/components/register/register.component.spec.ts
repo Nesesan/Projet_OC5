@@ -1,13 +1,13 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { ReactiveFormsModule } from '@angular/forms';
-import { MatCardModule } from '@angular/material/card';
-import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatIconModule } from '@angular/material/icon';
-import { MatInputModule } from '@angular/material/input';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { expect } from '@jest/globals';
+import {ComponentFixture, TestBed} from '@angular/core/testing';
+import {ReactiveFormsModule} from '@angular/forms';
+import {MatCardModule} from '@angular/material/card';
+import {MatFormFieldModule} from '@angular/material/form-field';
+import {MatIconModule} from '@angular/material/icon';
+import {MatInputModule} from '@angular/material/input';
+import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
+import {expect} from '@jest/globals';
 
-import { RegisterComponent } from './register.component';
+import {RegisterComponent} from './register.component';
 import {HttpClientTestingModule, HttpTestingController} from "@angular/common/http/testing";
 import {Router} from "@angular/router";
 
@@ -18,11 +18,11 @@ describe('RegisterComponent', () => {
   let router: Router;
 
   const validRegisterData = {
-    firstName: 'user',
-    lastName: 'One',
     email: 'user@mail.com',
-    password: 'password',
-  }
+    firstName: 'User',
+    lastName: 'One',
+    password: 'password'
+  };
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
@@ -49,20 +49,23 @@ describe('RegisterComponent', () => {
     fixture.detectChanges();
   });
 
+
   it('should create', () => {
     expect(component).toBeTruthy();
   });
 
-  it('Should set form values correctly', () => {
+
+  it('should set form values correctly', () => {
     component.form.setValue(validRegisterData);
 
-    expect(component.form.value.firstName).toEqual('user');
-    expect(component.form.value.lastName).toEqual('One');
-    expect(component.form.value.email).toEqual('user@mail.com');
-    expect(component.form.value.password).toEqual('password');
+    expect(component.form.value.email).toBe('user@mail.com');
+    expect(component.form.value.firstName).toBe('User');
+    expect(component.form.value.lastName).toBe('One');
+    expect(component.form.value.password).toBe('password');
   });
 
-  it('Should register successfully and navigate to login', () => {
+
+  it('should register successfully and navigate to login', () => {
     component.form.setValue(validRegisterData);
 
     fixture.detectChanges();
@@ -73,10 +76,11 @@ describe('RegisterComponent', () => {
     expect(req.request.method).toBe('POST');
     expect(req.request.body).toEqual(validRegisterData);
 
-    req.flush({})
+    req.flush({});
 
     expect(router.navigate).toHaveBeenCalledWith(['/login']);
   });
+
 
   it('should handle registration error correctly', () => {
 
