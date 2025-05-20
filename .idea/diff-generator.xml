@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="DiffGenerationConfig" isInitGenerateDdl="true">
+    <option name="initGenerateDdl" value="true" />
+    <option name="sourceModelValue" value="yoga-app:yoga-app" />
+    <option name="targetDbValue" value="1e6c0f59-0db0-42c3-8caf-f970fa95baa1" />
+  </component>
+</project>
