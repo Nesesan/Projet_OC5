@@ -15,7 +15,7 @@ public class UserDetailsImplTest {
         UserDetailsImpl user = UserDetailsImpl.builder()
                 .id(1L)
                 .username("test@mail.com")
-                .firstName("user")
+                .firstName("User")
                 .lastName("One")
                 .admin(true)
                 .password("secure")
@@ -54,7 +54,7 @@ public class UserDetailsImplTest {
 
         assertEquals(user1, user2);
         assertNotEquals(user1, user3);
-        assertNotEquals(user1, null);
-        assertNotEquals(user1, new Object());
+        assertNotEquals(null, user1);
+        assertNotEquals(new Object(), user1);
     }
 }
