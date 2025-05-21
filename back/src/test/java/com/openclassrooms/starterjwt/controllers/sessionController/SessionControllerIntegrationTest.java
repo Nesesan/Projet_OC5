@@ -37,6 +37,14 @@ public class SessionControllerIntegrationTest {
 
 
     @Test
+    @WithMockUser(username = "yoga@studio.com")
+    void testFindAllSessions() throws Exception {
+        mockMvc.perform(get("/api/session"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.length()").value(2));
+    }
+
+    @Test
     @WithMockUser(username = "lounss@mail.com")
     void testFindSessionWithId() throws Exception {
         mockMvc.perform(get("/api/session/1"))
@@ -116,15 +124,6 @@ public class SessionControllerIntegrationTest {
 
 
 
-
-
-    @Test
-    @WithMockUser(username = "yoga@studio.com")
-    void testFindAllSessions() throws Exception {
-        mockMvc.perform(get("/api/session"))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.length()").value(2));
-    }
 
     @Test
     @WithMockUser(username = "lounss@mail.com")
