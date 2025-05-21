@@ -13,7 +13,7 @@
 ### Clone the Repository
 
 
-git clone : https://github.com/OpenClassrooms-Student-Center/P5-Full-Stack-testing
+git clone : [https://github.com/OpenClassrooms-Student-Center/P5-Full-Stack-testing](https://github.com/Nesesan/Projet_OC5.git)
 - cd yoga
 
 ## Frontend Setup (Angular)
