@@ -6,7 +6,7 @@ DROP TABLE IF EXISTS TEACHERS;
 
 
 CREATE TABLE TEACHERS (
-                          id BIGINT PRIMARY KEY,
+                          id BIGINT AUTO_INCREMENT PRIMARY KEY,
                           first_name VARCHAR(50) NOT NULL,
                           last_name VARCHAR(50) NOT NULL,
                           created_at TIMESTAMP,
@@ -14,7 +14,7 @@ CREATE TABLE TEACHERS (
 );
 
 CREATE TABLE USERS (
-                       id BIGINT PRIMARY KEY,
+                       id BIGINT AUTO_INCREMENT PRIMARY KEY,
                        email VARCHAR(50) NOT NULL UNIQUE,
                        last_name VARCHAR(20) NOT NULL,
                        first_name VARCHAR(20) NOT NULL,
@@ -25,7 +25,7 @@ CREATE TABLE USERS (
 );
 
 CREATE TABLE SESSIONS (
-                          id BIGINT PRIMARY KEY,
+                          id BIGINT AUTO_INCREMENT PRIMARY KEY,
                           name VARCHAR(100) NOT NULL,
                           date DATE NOT NULL,
                           description TEXT,
@@ -36,7 +36,7 @@ CREATE TABLE SESSIONS (
 );
 
 CREATE TABLE PARTICIPATE (
-                             session_id BIGINT NOT NULL,
+                             session_id BIGINT AUTO_INCREMENT NOT NULL,
                              user_id BIGINT NOT NULL,
                              PRIMARY KEY (session_id, user_id),
                              CONSTRAINT FK_PARTICIPATE_SESSION FOREIGN KEY (session_id) REFERENCES SESSIONS(id),
