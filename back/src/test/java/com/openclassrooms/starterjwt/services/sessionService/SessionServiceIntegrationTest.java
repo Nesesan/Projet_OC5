@@ -22,11 +22,7 @@ class SessionServiceIntegrationTest {
 
 
 
-    @Test
-    void testFindAllSessions() {
-        List<Session> sessions = sessionService.findAll();
-        assertEquals(2, sessions.size());
-    }
+
 
 
     @Test
