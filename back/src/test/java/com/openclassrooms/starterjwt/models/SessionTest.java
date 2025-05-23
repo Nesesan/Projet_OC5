@@ -80,5 +80,31 @@ class SessionTest {
         assertTrue(violations.stream()
                 .anyMatch(v -> v.getPropertyPath().toString().equals("description")));
     }
+    @Test
+    void testLombokBuilderAndEquals() {
+        Session session1 = Session.builder()
+                .id(1L)
+                .name("Session A")
+                .description("desc")
+                .date(new Date())
+                .build();
 
+        Session session2 = Session.builder()
+                .id(1L)
+                .name("Session A")
+                .description("desc")
+                .date(new Date())
+                .build();
+
+        Session session3 = Session.builder()
+                .id(2L)
+                .name("Session B")
+                .description("desc")
+                .date(new Date())
+                .build();
+
+        assertEquals(session1, session2);
+        assertNotEquals(session1, session3);
+        assertEquals(session1.hashCode(), session2.hashCode());
+    }
 }

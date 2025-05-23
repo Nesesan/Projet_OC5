@@ -44,6 +44,32 @@ public class UserTest {
     }
 
     @Test
+    void shouldCreateUserWithRequiredArgsConstructor() {
+        User user = new User("req@example.com", "Doe", "John", "pass123", false);
+
+        assertThat(user.getEmail()).isEqualTo("req@example.com");
+        assertThat(user.getLastName()).isEqualTo("Doe");
+        assertThat(user.getFirstName()).isEqualTo("John");
+        assertThat(user.getPassword()).isEqualTo("pass123");
+        assertThat(user.isAdmin()).isFalse();
+    }
+
+    @Test
+    void shouldCreateUserWithAllArgsConstructor() {
+        LocalDateTime now = LocalDateTime.now();
+        User user = new User(10L, "all@example.com", "Doe", "Jane", "pw", true, now, now);
+
+        assertThat(user.getId()).isEqualTo(10L);
+        assertThat(user.getEmail()).isEqualTo("all@example.com");
+        assertThat(user.getFirstName()).isEqualTo("Jane");
+        assertThat(user.getLastName()).isEqualTo("Doe");
+        assertThat(user.getPassword()).isEqualTo("pw");
+        assertThat(user.isAdmin()).isTrue();
+        assertThat(user.getCreatedAt()).isEqualTo(now);
+        assertThat(user.getUpdatedAt()).isEqualTo(now);
+    }
+
+    @Test
     void shouldCreateUserWithBuilder() {
         LocalDateTime now = LocalDateTime.now();
         User user = User.builder()
@@ -65,6 +91,21 @@ public class UserTest {
         assertThat(user.isAdmin()).isFalse();
         assertThat(user.getCreatedAt()).isEqualTo(now);
         assertThat(user.getUpdatedAt()).isEqualTo(now);
+    }
+    @Test
+    void shouldUseEqualsAndHashCodeWithId() {
+        User user1 = new User(1L, "a@b.com", "Doe", "John", "pwd", false, null, null);
+        User user2 = new User(1L, "diff@b.com", "Diff", "Name", "pass", true, null, null);
+        User user3 = new User(2L, "a@b.com", "Doe", "John", "pwd", false, null, null);
+
+        assertThat(user1).isEqualTo(user2); // same ID
+        assertThat(user1.hashCode()).isEqualTo(user2.hashCode());
+
+        assertThat(user1).isNotEqualTo(user3);
+        assertThat(user1.hashCode()).isNotEqualTo(user3.hashCode());
+
+        assertThat(user1).isNotEqualTo(null);
+        assertThat(user1).isNotEqualTo("a string");
     }
 
 
